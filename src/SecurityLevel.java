@@ -8,6 +8,7 @@ public class SecurityLevel {
 	}
 	
 	public boolean compareLess(SecurityLevel x){
+	
 		if(this.value <= x.value){
 			return true;
 		}
