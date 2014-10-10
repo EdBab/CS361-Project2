@@ -10,16 +10,18 @@ public class CovertChannel {
 	static boolean vflag;
 	static PrintWriter logWriter;
 	static PrintWriter outWriter;
+	static int bytes = 0;
+	static int bits = 0;
 
-	public CovertChannel(boolean flag) throws FileNotFoundException, UnsupportedEncodingException {
+	public CovertChannel(boolean flag, String fileName) throws FileNotFoundException, UnsupportedEncodingException {
 		vflag = flag;
 		this.sys = new SecureSystem();
 		logWriter = new PrintWriter("log", "UTF-8");
-		outWriter = new PrintWriter("test.out", "UTF-8");
+		outWriter = new PrintWriter(fileName + ".out", "UTF-8");
 	}
 
 	public void sendBit(char x) throws FileNotFoundException, UnsupportedEncodingException {
-		
+		bits++;
 		sys.createSubject("Lyle", SecurityLevel.LOW);
 		sys.createSubject("Hal", SecurityLevel.HIGH);
 		if (x == '0') {
@@ -66,6 +68,8 @@ public class CovertChannel {
 	
 	//takes an 8 bit string, sends a digit at a time
 	public void charAsByte(String x) throws FileNotFoundException, UnsupportedEncodingException  {
+		bytes++;
+		
 		if (x.length() < 8) {
 
 			String add = "";
@@ -90,24 +94,27 @@ public class CovertChannel {
 	}
 
 	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
-		File test = new File("test");
-		// sys.getReferenceMonitor().createNewObject("Lobj", low);
-		// sys.getReferenceMonitor().createNewObject("Hobj", high);
-		/*if (args[0].equals("v")) {
-			CovertChannel chan = new CovertChannel(true);
+		
+		
+		boolean check = false;
+		String fileName = "";
+		if (args[0].equals("v")) {
+			
+			check = true;
+			fileName = args[1];
 			
 		
 		
-	}*/
+	}
+		else
+		fileName = args[0];
 		
+		CovertChannel chan = new CovertChannel(check, fileName);
+		File test = new File(fileName);
 		
-		
-		CovertChannel chan = new CovertChannel(true);
-		chan.sys.getReferenceMonitor()
-				.createNewObject("Obj", SecurityLevel.LOW);
 		Scanner sc = new Scanner(test);
 		
-		
+		long timeTaken = System.currentTimeMillis();
 		while (sc.hasNext()) {
 			String x = sc.nextLine();
 
@@ -119,6 +126,9 @@ public class CovertChannel {
 			}
 			outWriter.println("");
 		}
+		timeTaken = Math.abs(timeTaken - System.currentTimeMillis());
+		System.out.println(timeTaken);
+		System.out.println(bits + "   "  + bytes + "   "+ bits/(timeTaken));
 		sc.close();
 		logWriter.close();
 		outWriter.close();
