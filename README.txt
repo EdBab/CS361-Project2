@@ -20,12 +20,12 @@ We have completely finished the assignment.
 [Test Cases]
 I am using one of the CS lab machines on the third floor and my cpu is running at 1600 Mhz
 [Test 1]
-Patriot Games 1,115,489 bytes 1154 bits/ms
-test case is in PatriotGames.txt
+Children Of Dune 870,083 bytes 1150 bits/ms
+test case is in ChildrenOfDune.txt
 [Test 2]
-Jordan-Lord of Chaos	2,209,347 bytes 1233 bits/ms
-test case is in LordOfChaos.txt
+R.A.SALVATORE -THE HUNTER'S BLADES TRILOGY	659,577 bytes 1114 bits/ms
+test case is in HunterBlade.txt
 
 [Test 3]
-Test 3002 bytes  140 bits/ms
+Test 3,466,144 bytes  1206 bits/ms
 test case is in Test.txt

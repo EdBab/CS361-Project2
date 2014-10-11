@@ -27,8 +27,12 @@ public class CovertChannel {
 	
 	
 	
-	public static void printChar(char x){
+	public static void printChar(char x, boolean end){
 		bytes++;
+		if(end){
+			outWriter.println();
+		}
+		else
 		outWriter.print(x);
 	}
 
@@ -62,9 +66,14 @@ public class CovertChannel {
 			
 			String line = sc.nextLine();
 			
-			for (int i = 0; i < line.length(); i++) {
-
-				String compute = Integer.toBinaryString((Integer) (int) line.charAt(i));
+			for (int i = 0; i < line.length() +1; i++) {
+				String compute  ="";
+				if(i == line.length()){
+					compute = "00001010";
+				}
+				else
+					compute =	Integer.toBinaryString((Integer) (int) line.charAt(i));
+				//}
 				if (compute.length() < 8) {
 
 					String add = "";
@@ -76,7 +85,7 @@ public class CovertChannel {
 					}
 					compute = add + compute;
 				}
-
+				
 				for (int k = 0; k < compute.length(); k++) {
 					bits++;
 					if (compute.charAt(k) == '0') {
@@ -121,7 +130,7 @@ public class CovertChannel {
 
 			
 			}
-			outWriter.println("");
+			//outWriter.println("");
 		}
 		sc.close();
 		outWriter.close();

@@ -29,8 +29,14 @@ public class SecureSubject {
 	
 		if(build.length() == 8){
 			int x = Integer.parseInt(build, 2);
-			CovertChannel.printChar((char)x);
+			if(build.equals("00001010")){
+				CovertChannel.printChar((char)x, true);
+				build = "";
+			}
+			else{
+			CovertChannel.printChar((char)x, false);
 			build = "";
+			}
 		}
 	}
 }
