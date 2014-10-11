@@ -10,13 +10,13 @@ import java.util.Scanner;
 public class SecureSystem {
 	 ReferenceMonitor monitor;
 	 ArrayList<SecureSubject> subjects;
-	 //PrintWriter writer;
+	 
 	
 	 
 	 public SecureSystem() throws FileNotFoundException, UnsupportedEncodingException{
 		 this.monitor = new ReferenceMonitor();
 		 this.subjects = new ArrayList<SecureSubject>();
-		  //writer = new PrintWriter("log", "UTF-8");
+		  
 		
 	 }
 

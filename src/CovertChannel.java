@@ -11,7 +11,8 @@ public class CovertChannel {
 	static PrintWriter logWriter;
 	static PrintWriter outWriter;
 	static int bytes = 0;
-	static int bits = 0;
+	static long bits = 0;
+	
 
 	public CovertChannel(boolean flag, String fileName) throws FileNotFoundException, UnsupportedEncodingException {
 		vflag = flag;
@@ -20,81 +21,19 @@ public class CovertChannel {
 		outWriter = new PrintWriter(fileName + ".out", "UTF-8");
 	}
 
-	public void sendBit(char x) throws FileNotFoundException, UnsupportedEncodingException {
-		bits++;
-		sys.createSubject("Lyle", SecurityLevel.LOW);
-		sys.createSubject("Hal", SecurityLevel.HIGH);
-		if (x == '0') {
-
-			this.sys.getReferenceMonitor().createNewObject("Obj",
-					SecurityLevel.HIGH);
-			sys.getReferenceMonitor().createNewObject("Obj", SecurityLevel.LOW);
-			sys.getReferenceMonitor().checkWrite("lyle", "Obj", 1);
-			sys.updateSubject("lyle",
-					sys.getReferenceMonitor().checkRead("lyle", "Obj"));
-			sys.getReferenceMonitor().checkDestroy("Lyle", "Obj");
-
-			SecureSubject.run(sys.subjects.get(1).getTemp());
-			if (vflag) {
-				logWriter.println("CREATE HAL OBJ");
-				logWriter.println("CREATE LYLE OBJ");
-				logWriter.println("WRITE LYLE OBJ 1");
-				logWriter.println("READ LYLE OBJ");
-				logWriter.println("DESTROY LYLE OBJ");
-				logWriter.println("RUN LYLE");
-			}
-
-		} else if (x == '1') {
-			sys.getReferenceMonitor().createNewObject("Obj", SecurityLevel.LOW);
-			sys.getReferenceMonitor().checkWrite("Lyle", "Obj", 1);
-			sys.updateSubject("Lyle",
-					sys.getReferenceMonitor().checkRead("Lyle", "Obj"));
-			sys.getReferenceMonitor().checkDestroy("Lyle", "Obj");
-
-			SecureSubject.run(sys.subjects.get(0).getTemp());
-			if (vflag) {
-				logWriter.println("CREATE LYLE OBJ");
-				logWriter.println("WRITE LYLE OBJ 1");
-				logWriter.println("READ LYLE OBJ");
-				logWriter.println("DESTROY LYLE OBJ");
-				logWriter.println("RUN LYLE");
-			}
-
-		} else
-			System.err.println("messed up sendBit");
-		
-	}
+	
 
 	
-	//takes an 8 bit string, sends a digit at a time
-	public void charAsByte(String x) throws FileNotFoundException, UnsupportedEncodingException  {
-		bytes++;
-		
-		if (x.length() < 8) {
-
-			String add = "";
-			int c = x.length();
-			while (c < 8) {
-				add += "0";
-				c++;
-
-			}
-			x = add + x;
-		}
-
-		for (int i = 0; i < x.length(); i++) {
-			sendBit(x.charAt(i));
-			
-			}
-		}
+	
 	
 	
 	public static void printChar(char x){
+		bytes++;
 		outWriter.print(x);
 	}
 
 	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
-		
+	
 		
 		boolean check = false;
 		String fileName = "";
@@ -110,28 +49,89 @@ public class CovertChannel {
 		fileName = args[0];
 		
 		CovertChannel chan = new CovertChannel(check, fileName);
+		chan.sys.createSubject("Lyle", SecurityLevel.LOW);
+		chan.sys.createSubject("Hal", SecurityLevel.HIGH);
 		File test = new File(fileName);
 		
 		Scanner sc = new Scanner(test);
 		
 		long timeTaken = System.currentTimeMillis();
+		
 		while (sc.hasNext()) {
-			String x = sc.nextLine();
+			
+			
+			String line = sc.nextLine();
+			
+			for (int i = 0; i < line.length(); i++) {
 
-			for (int i = 0; i < x.length(); i++) {
+				String compute = Integer.toBinaryString((Integer) (int) line.charAt(i));
+				if (compute.length() < 8) {
 
-				Integer send = (Integer) (int) x.charAt(i);
+					String add = "";
+					int c = compute.length();
+					while (c < 8) {
+						add += "0";
+						c++;
 
-				chan.charAsByte(Integer.toBinaryString(send));
+					}
+					compute = add + compute;
+				}
+
+				for (int k = 0; k < compute.length(); k++) {
+					bits++;
+					if (compute.charAt(k) == '0') {
+
+						chan.sys.getReferenceMonitor().createNewObject("Obj",
+								SecurityLevel.HIGH);
+						chan.sys.getReferenceMonitor().createNewObject("Obj", SecurityLevel.LOW);
+						chan.sys.getReferenceMonitor().checkWrite("lyle", "Obj", 1);
+						chan.sys.updateSubject("lyle",
+								chan.sys.getReferenceMonitor().checkRead("lyle", "Obj"));
+						chan.sys.getReferenceMonitor().checkDestroy("Lyle", "Obj");
+
+						SecureSubject.run(chan.sys.subjects.get(1).getTemp());
+						if (vflag) {
+							logWriter.println("CREATE HAL OBJ");
+							logWriter.println("CREATE LYLE OBJ");
+							logWriter.println("WRITE LYLE OBJ 1");
+							logWriter.println("READ LYLE OBJ");
+							logWriter.println("DESTROY LYLE OBJ");
+							logWriter.println("RUN LYLE");
+						}
+
+					} else if (compute.charAt(k) == '1') {
+						chan.sys.getReferenceMonitor().createNewObject("Obj", SecurityLevel.LOW);
+						chan.sys.getReferenceMonitor().checkWrite("Lyle", "Obj", 1);
+						chan.sys.updateSubject("Lyle",
+								chan.sys.getReferenceMonitor().checkRead("Lyle", "Obj"));
+						chan.sys.getReferenceMonitor().checkDestroy("Lyle", "Obj");
+
+						SecureSubject.run(chan.sys.subjects.get(0).getTemp());
+						if (vflag) {
+							logWriter.println("CREATE LYLE OBJ");
+							logWriter.println("WRITE LYLE OBJ 1");
+							logWriter.println("READ LYLE OBJ");
+							logWriter.println("DESTROY LYLE OBJ");
+							logWriter.println("RUN LYLE");
+						}
+
+					}
+					
+					}
+
+			
 			}
 			outWriter.println("");
 		}
-		timeTaken = Math.abs(timeTaken - System.currentTimeMillis());
-		System.out.println(timeTaken);
-		System.out.println(bits + "   "  + bytes + "   "+ bits/(timeTaken));
 		sc.close();
-		logWriter.close();
 		outWriter.close();
+		logWriter.close();
+		
+		
+		timeTaken = Math.abs(timeTaken - System.currentTimeMillis());
+		
+		System.out.println("Bits: " + bits + " Bytes: "  + bytes + " Bits/Ms: "+ bits/(timeTaken));
+		
 	}
 	
 }
